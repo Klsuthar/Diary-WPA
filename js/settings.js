@@ -46,6 +46,15 @@ function setupEventListeners() {
         saveSettings();
     });
 
+    // Splash duration slider
+    const splashDurationRange = document.getElementById('splashDurationRange');
+    const splashDurationValue = document.getElementById('splashDurationValue');
+    
+    splashDurationRange.addEventListener('input', function() {
+        splashDurationValue.textContent = this.value + 's';
+        saveSettings();
+    });
+
     // Auto-save toggle
     document.getElementById('autoSaveToggle').addEventListener('change', saveSettings);
 
@@ -160,6 +169,8 @@ function loadSettings() {
     document.getElementById('themeSelect').value = settings.theme || 'dark';
     document.getElementById('fontSizeRange').value = settings.fontSize || 16;
     document.getElementById('fontSizeValue').textContent = (settings.fontSize || 16) + 'px';
+    document.getElementById('splashDurationRange').value = settings.splashDuration || 4;
+    document.getElementById('splashDurationValue').textContent = (settings.splashDuration || 4) + 's';
     document.getElementById('autoSaveToggle').checked = settings.autoSave !== false;
     document.getElementById('backupFrequency').value = settings.backupFrequency || 'weekly';
     document.getElementById('notificationsToggle').checked = settings.notifications || false;
@@ -225,6 +236,7 @@ function saveSettings() {
     const settings = {
         theme: document.getElementById('themeSelect').value,
         fontSize: parseInt(document.getElementById('fontSizeRange').value),
+        splashDuration: parseInt(document.getElementById('splashDurationRange').value),
         autoSave: document.getElementById('autoSaveToggle').checked,
         backupFrequency: document.getElementById('backupFrequency').value,
         notifications: document.getElementById('notificationsToggle').checked,

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>My Personal Diary</title>
-    <!-- <link rel="manifest" href="manifest.json"> -->
+    <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#1e293b">
 
     <link rel="icon" href="images/logo.svg" type="image/svg+xml">
@@ -251,11 +251,13 @@
                             </div>
                             <div class="slider-container"> <label for="energyLevel">Energy Level: <span
                                         id="energyLevelValue">5</span></label> <input type="range" id="energyLevel"
-                                    name="energyLevel" min="1" max="10" value="5" step="1" inputmode="none"> </div>
+                                    name="energyLevel" min="0" max="10" value="5" step="1" inputmode="none"> </div>
                             <div class="slider-container"> <label for="stressLevel">Stress Level: <span
                                         id="stressLevelValue">5</span></label> <input type="range" id="stressLevel"
-                                    name="stressLevel" min="1" max="10" value="5" step="1" inputmode="none"> </div>
-                            <div> <label for="energyStressReason">Energy/Stress Reason:</label> <input type="text" id="energyStressReason" name="energyStressReason" placeholder="e.g., Work pressure, Good workout"> </div>
+                                    name="stressLevel" min="0" max="10" value="5" step="1" inputmode="none"> </div>
+                            <div> <label for="energyStressReason">Energy/Stress Reason:</label> <textarea id="energyStressReason" name="energyStressReason" rows="2" placeholder="e.g., Work pressure, Good workout"></textarea>
+                                <div id="energyStressReasonCounts">Words: 0, Chars: 0</div>
+                            </div>
                             <div style=" height: 20px; background-color: transparent;"></div>
                         </fieldset>
                     </div>

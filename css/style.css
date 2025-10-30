@@ -608,11 +608,8 @@ body {
     flex-shrink: 0;
     overflow-y: auto;
     height: 100%;
-    padding: 15px 15px 30px;
-    /* Added more bottom padding for scroll room */
+    padding: 15px 15px calc(var(--bottom-nav-height) + 20px);
     background-color: var(--primary-bg);
-    /* -webkit-overflow-scrolling: touch; */
-    /* For smoother scrolling on iOS, if needed */
 }
 
 /* --- Bottom Navigation --- */
@@ -1239,8 +1236,7 @@ button:disabled {
 
 /* --- History Tab Styles --- */
 #tab-history {
-    padding-bottom: 15px;
-    /* Extra padding at the bottom of the scrollable area */
+    padding-bottom: calc(var(--bottom-nav-height) + 20px);
 }
 
 #historyListContainer {

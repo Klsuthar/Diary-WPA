@@ -32,14 +32,17 @@ document.addEventListener('DOMContentLoaded', () => {
         splashScreen.classList.add('fade-out');
         setTimeout(() => {
             splashScreen.style.display = 'none';
+            checkPasswordProtection();
         }, 500);
     }
     
-    // Show random quote and hide after 4 seconds
+    // Show random quote and hide after configured duration
     if (splashScreen && splashQuote) {
         const randomQuote = getRandomQuote();
         splashQuote.textContent = randomQuote;
-        setTimeout(hideSplashScreen, 4000);
+        const settings = JSON.parse(localStorage.getItem('diarySettings') || '{}');
+        const splashDuration = (settings.splashDuration || 4) * 1000;
+        setTimeout(hideSplashScreen, splashDuration);
     }
 
     // --- DOM Element References ---
@@ -82,6 +85,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const summaryCountsDisplay = document.getElementById('summaryCounts');
     const overallDayExperienceTextarea = document.getElementById('overallDayExperience');
     const overallCountsDisplay = document.getElementById('overallCounts');
+    const energyStressReasonTextarea = document.getElementById('energyStressReason');
+    const energyStressReasonCountsDisplay = document.getElementById('energyStressReasonCounts');
 
     const historyListContainer = document.getElementById('historyListContainer');
     const historyTabPanel = document.getElementById('tab-history');
@@ -326,6 +331,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function updateEnergyStressReasonCounts() {
+        if (energyStressReasonTextarea && energyStressReasonCountsDisplay) {
+            const text = energyStressReasonTextarea.value;
+            const charCount = text.length;
+            const wordCount = text.trim() === '' ? 0 : text.trim().split(/\s+/).filter(Boolean).length;
+            energyStressReasonCountsDisplay.textContent = `Words: ${wordCount}, Chars: ${charCount}`;
+        }
+    }
+
     function getValue(elementId, type = 'text') {
         const element = document.getElementById(elementId);
         if (!element) return type === 'number' || type === 'range' ? null : '';
@@ -348,6 +362,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             if (elementId === 'dailyActivitySummary') updateSummaryCounts();
             if (elementId === 'overallDayExperience') updateOverallCounts();
+            if (elementId === 'energyStressReason') updateEnergyStressReasonCounts();
         }
     }
 
@@ -572,6 +587,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (uvIndexSlider) updateSliderDisplay(uvIndexSlider, uvIndexValueDisplay);
         updateSummaryCounts();
         updateOverallCounts();
+        updateEnergyStressReasonCounts();
         checkAndUpdateAllTabIcons();
         loadAppRecommendations();
     }
@@ -1464,6 +1480,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (dailyActivitySummaryTextarea) dailyActivitySummaryTextarea.addEventListener('input', updateSummaryCounts);
     if (overallDayExperienceTextarea) overallDayExperienceTextarea.addEventListener('input', updateOverallCounts);
+    if (energyStressReasonTextarea) energyStressReasonTextarea.addEventListener('input', updateEnergyStressReasonCounts);
 
     diaryForm.addEventListener('submit', function (event) {
         event.preventDefault();
@@ -1776,7 +1793,25 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!sessionAuth || sessionAuth !== 'authenticated') {
                 showPasswordPrompt();
                 return false;
+            } else {
+                applyStoredTheme();
+                updateTopBarForMultiSelectView(false);
+                setupScrollSelector(temperatureMinSelector, -20, 50, '°');
+                setupScrollSelector(temperatureMaxSelector, -20, 50, '°');
+                setupScrollSelector(airQualityIndexSelector, 0, 300, '', 5);
+                setupScrollSelector(humidityPercentSelector, 1, 100, '%');
+                initializeForm();
+                slideToPanel(0, false);
             }
+        } else {
+            applyStoredTheme();
+            updateTopBarForMultiSelectView(false);
+            setupScrollSelector(temperatureMinSelector, -20, 50, '°');
+            setupScrollSelector(temperatureMaxSelector, -20, 50, '°');
+            setupScrollSelector(airQualityIndexSelector, 0, 300, '', 5);
+            setupScrollSelector(humidityPercentSelector, 1, 100, '%');
+            initializeForm();
+            slideToPanel(0, false);
         }
         return true;
     }
@@ -1786,9 +1821,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const isPattern = settings.authType === 'pattern';
         
         const overlay = document.createElement('div');
+        overlay.id = 'passwordOverlay';
         overlay.style.cssText = `
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9); z-index: 9999; display: flex;
+            background: radial-gradient(ellipse at center, #1e293b 0%, #0f172a 70%, #000000 100%);
+            z-index: 10000; display: flex;
             align-items: center; justify-content: center; backdrop-filter: blur(10px);
         `;
         
@@ -1847,6 +1884,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 sessionStorage.setItem('diaryAuth', 'authenticated');
                 overlay.remove();
                 delete window.verifyPassword;
+                applyStoredTheme();
+                updateTopBarForMultiSelectView(false);
+                setupScrollSelector(temperatureMinSelector, -20, 50, '°');
+                setupScrollSelector(temperatureMaxSelector, -20, 50, '°');
+                setupScrollSelector(airQualityIndexSelector, 0, 300, '', 5);
+                setupScrollSelector(humidityPercentSelector, 1, 100, '%');
+                initializeForm();
+                slideToPanel(0, false);
             } else {
                 document.getElementById('passwordPrompt').style.borderColor = 'var(--danger-color)';
                 document.getElementById('passwordPrompt').value = '';
@@ -1917,7 +1962,16 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (enteredPattern === savedPattern) {
             sessionStorage.setItem('diaryAuth', 'authenticated');
-            document.querySelector('[style*="position: fixed"]').remove();
+            const overlay = document.getElementById('passwordOverlay');
+            if (overlay) overlay.remove();
+            applyStoredTheme();
+            updateTopBarForMultiSelectView(false);
+            setupScrollSelector(temperatureMinSelector, -20, 50, '°');
+            setupScrollSelector(temperatureMaxSelector, -20, 50, '°');
+            setupScrollSelector(airQualityIndexSelector, 0, 300, '', 5);
+            setupScrollSelector(humidityPercentSelector, 1, 100, '%');
+            initializeForm();
+            slideToPanel(0, false);
         } else {
             document.getElementById('authPatternStatus').textContent = 'Wrong pattern, try again';
             document.getElementById('authPatternStatus').style.color = 'var(--danger-color)';
@@ -1938,33 +1992,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Initial Application Setup ---
-    if (checkPasswordProtection()) {
-        applyStoredTheme();
-        updateTopBarForMultiSelectView(false);
-    } else {
-        // Password protection active, wait for authentication
-        const checkAuth = setInterval(() => {
-            if (sessionStorage.getItem('diaryAuth') === 'authenticated') {
-                clearInterval(checkAuth);
-                applyStoredTheme();
-                updateTopBarForMultiSelectView(false);
-            }
-        }, 100);
-    }
-    
-    // Setup scroll selectors
-    setupScrollSelector(temperatureMinSelector, -20, 50, '°');
-    setupScrollSelector(temperatureMaxSelector, -20, 50, '°');
-    setupScrollSelector(airQualityIndexSelector, 0, 300, '', 5);
-    setupScrollSelector(humidityPercentSelector, 1, 100, '%');
-
-    initializeForm();
-    slideToPanel(0, false);
+    // Password check will be called after splash screen hides
     
     // Skip splash screen if user clicks anywhere
     if (splashScreen) {
         splashScreen.addEventListener('click', () => {
-            hideSplashScreen();
+            const settings = JSON.parse(localStorage.getItem('diarySettings') || '{}');
+            const splashDuration = settings.splashDuration || 4;
+            if (splashDuration > 0) {
+                hideSplashScreen();
+            }
         });
     }
 
@@ -2041,17 +2078,25 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     
                     // Request notification permission
-                    if ('Notification' in window && 'serviceWorker' in navigator) {
-                        if (Notification.permission === 'default') {
+                    if ('Notification' in window) {
+                        const settings = JSON.parse(localStorage.getItem('diarySettings') || '{}');
+                        if (settings.notifications && Notification.permission === 'default') {
                             setTimeout(() => {
                                 showToastWithAction('Enable notifications for reminders?', 'Enable', () => {
                                     Notification.requestPermission().then(permission => {
                                         if (permission === 'granted') {
                                             showToast('Notifications enabled!', 'success');
+                                            scheduleNotifications();
+                                        } else {
+                                            showToast('Notification permission denied', 'error');
+                                            settings.notifications = false;
+                                            localStorage.setItem('diarySettings', JSON.stringify(settings));
                                         }
                                     });
                                 });
                             }, 5000);
+                        } else if (settings.notifications && Notification.permission === 'granted') {
+                            scheduleNotifications();
                         }
                     }
                 })
@@ -2123,5 +2168,68 @@ document.addEventListener('DOMContentLoaded', () => {
                 toast.remove();
             }
         }, 10000);
+    }
+
+    // Notification scheduling functions
+    function scheduleNotifications() {
+        if (window.notificationTimeouts) {
+            window.notificationTimeouts.forEach(timeout => clearTimeout(timeout));
+        }
+        window.notificationTimeouts = [];
+        
+        const settings = JSON.parse(localStorage.getItem('diarySettings') || '{}');
+        if (!settings.notifications || Notification.permission !== 'granted') {
+            return;
+        }
+        
+        const notifications = settings.notificationsList || [];
+        
+        notifications.forEach(notification => {
+            if (!notification.enabled) return;
+            
+            const [hours, minutes] = notification.time.split(':').map(Number);
+            const now = new Date();
+            const scheduledTime = new Date();
+            scheduledTime.setHours(hours, minutes, 0, 0);
+            
+            if (scheduledTime <= now) {
+                scheduledTime.setDate(scheduledTime.getDate() + 1);
+            }
+            
+            const timeUntilNotification = scheduledTime.getTime() - now.getTime();
+            
+            const timeout = setTimeout(() => {
+                showDiaryNotification(notification.label);
+                setTimeout(scheduleNotifications, 1000);
+            }, timeUntilNotification);
+            
+            window.notificationTimeouts.push(timeout);
+        });
+    }
+
+    function showDiaryNotification(message) {
+        if (!('Notification' in window) || Notification.permission !== 'granted') {
+            return;
+        }
+        
+        try {
+            const notification = new Notification('My Personal Diary', {
+                body: message,
+                icon: 'images/logo256.png',
+                badge: 'images/logo64.png',
+                requireInteraction: false,
+                silent: false,
+                tag: 'diary-reminder'
+            });
+            
+            setTimeout(() => notification.close(), 5000);
+            
+            notification.onclick = function() {
+                window.focus();
+                notification.close();
+            };
+        } catch (error) {
+            console.error('Error showing notification:', error);
+        }
     }
 });
