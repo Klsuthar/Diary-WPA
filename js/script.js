@@ -267,7 +267,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (isNaN(dateObj.getTime())) {
                         currentDateDisplay.innerHTML = `Invalid Date <i class="fas fa-calendar-alt date-display-icon"></i>`;
                     } else {
-                        currentDateDisplay.innerHTML = `${dateObj.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })} <i class="fas fa-calendar-alt date-display-icon"></i>`;
+                        const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                        const weekday = weekdays[dateObj.getDay()];
+                        currentDateDisplay.innerHTML = `${weekday}, ${dateObj.toLocaleDateString(undefined, { month: 'short', day: 'numeric' })} <i class="fas fa-calendar-alt date-display-icon"></i>`;
                     }
                 } catch (e) {
                     currentDateDisplay.innerHTML = `Select Date <i class="fas fa-calendar-alt date-display-icon"></i>`;
@@ -1109,9 +1111,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function getFullEntryDataForExport(entryFormData, dateKey) {
         const exportData = {};
-        exportData.version = "2.0";
+        exportData.version = "3.0";
         exportData.date = entryFormData.date || dateKey;
         exportData.day_id = calculateDaysSince(REFERENCE_START_DATE, exportData.date);
+        
+        // Add weekday
+        try {
+            const dateObj = new Date(exportData.date + 'T00:00:00');
+            const weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            exportData.weekday = weekdays[dateObj.getDay()];
+        } catch (e) {
+            exportData.weekday = '';
+        }
 
         const pFloat = val => (val !== null && val !== undefined && String(val).trim() !== "" && !isNaN(parseFloat(String(val)))) ? parseFloat(String(val)) : null;
         const pInt = val => (val !== null && val !== undefined && String(val).trim() !== "" && !isNaN(parseInt(String(val)))) ? parseInt(String(val)) : null;
@@ -2000,7 +2011,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Service Worker Registration with enhanced features
     if ('serviceWorker' in navigator && window.location.protocol !== 'file:') {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/sw.js')
+            navigator.serviceWorker.register('./sw.js')
                 .then(registration => {
                     console.log('ServiceWorker registration successful');
                     
