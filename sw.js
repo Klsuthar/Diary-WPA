@@ -11,19 +11,19 @@ const MAX_DYNAMIC_CACHE_SIZE = 50;
 const MAX_IMAGES_CACHE_SIZE = 20;
 
 const APP_SHELL_ASSETS = [
-    '/index.html',
-    '/settings.html',
-    '/css/style.css',
-    '/css/settings.css',
-    '/js/script.js',
-    '/js/settings.js',
-    '/images/logo.ico',
-    '/images/logo.svg',
-    '/images/logo16.png',
-    '/images/logo32.png',
-    '/images/logo64.png',
-    '/images/logo256.png',
-    '/images/logo512.png'
+    './index.html',
+    './settings.html',
+    './css/style.css',
+    './css/settings.css',
+    './js/script.js',
+    './js/settings.js',
+    './images/logo.ico',
+    './images/logo.svg',
+    './images/logo16.png',
+    './images/logo32.png',
+    './images/logo64.png',
+    './images/logo256.png',
+    './images/logo512.png'
 ];
 
 const EXTERNAL_ASSETS = [
@@ -115,7 +115,7 @@ self.addEventListener('fetch', event => {
                 .catch(() => {
                     // If the network request fails (e.g., user is offline), serve the main index.html from the cache.
                     console.log('[Service Worker] Navigation fetch failed. Serving offline fallback from cache.');
-                    return caches.match('/index.html');
+                    return caches.match('./index.html') || caches.match('index.html');
                 })
         );
         return;
@@ -145,7 +145,7 @@ self.addEventListener('fetch', event => {
             .catch(error => {
                 console.error('[Service Worker] Fetch failed:', error);
                 if (request.destination === 'image') {
-                    return caches.match('images/logo256.png');
+                    return caches.match('./images/logo256.png') || caches.match('images/logo256.png');
                 }
             })
     );
