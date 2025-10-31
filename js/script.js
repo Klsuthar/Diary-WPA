@@ -1476,7 +1476,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (dateInput) dateInput.addEventListener('change', () => {
         const newDateStr = dateInput.value;
-        if (newDateStr && newDateStr.match(/^\d{4}-\d{2}-\d{2}$/)) {
+        if (newDateStr) {
             updateCurrentDateDisplay(newDateStr);
             loadFormForDate(newDateStr);
         }

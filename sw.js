@@ -1,10 +1,10 @@
 // sw.js - Service Worker
 
 // --- Cache Configuration ---
-const APP_SHELL_CACHE_NAME = 'my-personal-diary-static-v30';
-const DYNAMIC_CACHE_NAME = 'my-personal-diary-dynamic-v30';
-const FONTS_CACHE_NAME = 'my-personal-diary-fonts-v30';
-const IMAGES_CACHE_NAME = 'my-personal-diary-images-v30';
+const APP_SHELL_CACHE_NAME = 'my-personal-diary-static-v32';
+const DYNAMIC_CACHE_NAME = 'my-personal-diary-dynamic-v32';
+const FONTS_CACHE_NAME = 'my-personal-diary-fonts-v32';
+const IMAGES_CACHE_NAME = 'my-personal-diary-images-v32';
 
 // Cache size limits
 const MAX_DYNAMIC_CACHE_SIZE = 50;
@@ -111,15 +111,16 @@ self.addEventListener('fetch', event => {
     // but still allows the app to load from the cache if they are offline.
     if (request.mode === 'navigate') {
         event.respondWith(
-            caches.match('index.html')
-                .then(cachedResponse => {
-                    if (cachedResponse) {
-                        return cachedResponse;
+            fetch(request)
+                .then(response => {
+                    if (response.ok) {
+                        return response;
                     }
-                    return fetch(request).catch(() => {
-                        console.log('[Service Worker] Navigation fetch failed. Serving offline fallback.');
-                        return caches.match('index.html');
-                    });
+                    return caches.match(request.url.includes('settings') ? 'settings.html' : 'index.html');
+                })
+                .catch(() => {
+                    console.log('[Service Worker] Navigation fetch failed. Serving offline fallback.');
+                    return caches.match(request.url.includes('settings') ? 'settings.html' : 'index.html');
                 })
         );
         return;
