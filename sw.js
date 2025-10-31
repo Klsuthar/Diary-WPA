@@ -1,10 +1,10 @@
 // sw.js - Service Worker
 
 // --- Cache Configuration ---
-const APP_SHELL_CACHE_NAME = 'my-personal-diary-static-v25';
-const DYNAMIC_CACHE_NAME = 'my-personal-diary-dynamic-v25';
-const FONTS_CACHE_NAME = 'my-personal-diary-fonts-v25';
-const IMAGES_CACHE_NAME = 'my-personal-diary-images-v25';
+const APP_SHELL_CACHE_NAME = 'my-personal-diary-static-v29';
+const DYNAMIC_CACHE_NAME = 'my-personal-diary-dynamic-v29';
+const FONTS_CACHE_NAME = 'my-personal-diary-fonts-v29';
+const IMAGES_CACHE_NAME = 'my-personal-diary-images-v29';
 
 // Cache size limits
 const MAX_DYNAMIC_CACHE_SIZE = 50;
@@ -111,11 +111,15 @@ self.addEventListener('fetch', event => {
     // but still allows the app to load from the cache if they are offline.
     if (request.mode === 'navigate') {
         event.respondWith(
-            fetch(request)
-                .catch(() => {
-                    // If the network request fails (e.g., user is offline), serve the main index.html from the cache.
-                    console.log('[Service Worker] Navigation fetch failed. Serving offline fallback from cache.');
-                    return caches.match('index.html');
+            caches.match('index.html')
+                .then(cachedResponse => {
+                    if (cachedResponse) {
+                        return cachedResponse;
+                    }
+                    return fetch(request).catch(() => {
+                        console.log('[Service Worker] Navigation fetch failed. Serving offline fallback.');
+                        return caches.match('index.html');
+                    });
                 })
         );
         return;

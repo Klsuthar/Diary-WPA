@@ -38,11 +38,15 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Show random quote and hide after configured duration
     if (splashScreen && splashQuote) {
-        const randomQuote = getRandomQuote();
-        splashQuote.textContent = randomQuote;
         const settings = JSON.parse(localStorage.getItem('diarySettings') || '{}');
-        const splashDuration = (settings.splashDuration || 4) * 1000;
-        setTimeout(hideSplashScreen, splashDuration);
+        if (settings.splashScreen === false) {
+            hideSplashScreen();
+        } else {
+            const randomQuote = getRandomQuote();
+            splashQuote.textContent = randomQuote;
+            const splashDuration = (settings.splashDuration || 4) * 1000;
+            setTimeout(hideSplashScreen, splashDuration);
+        }
     }
 
     // --- DOM Element References ---
@@ -1646,11 +1650,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    let allowNavigation = false;
+    
     window.addEventListener('beforeunload', (event) => {
+        if (allowNavigation) return;
         if (!isMultiSelectModeActive && tabPanels[currentTabIndex]?.id !== 'tab-history') {
             console.log('Auto-saving data on beforeunload.');
             performSaveOperation(true);
-
             event.preventDefault();
             event.returnValue = '';
             return '';
@@ -1717,13 +1723,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (settingsButton) {
         settingsButton.addEventListener('click', () => {
-            // Auto-save current form data before going to settings
             performSaveOperation(true);
-            // Disable beforeunload warning for settings navigation
-            window.onbeforeunload = null;
-            setTimeout(() => {
-                window.location.href = 'settings.html';
-            }, 100);
+            allowNavigation = true;
+            window.location.href = './settings.html';
             toggleDropdownMenu(false);
         });
     }

@@ -1,17 +1,6 @@
 // Settings Page JavaScript
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Check password protection for settings access
-    const settings = JSON.parse(localStorage.getItem('diarySettings') || '{}');
-    if (settings.passwordProtection && settings.password) {
-        const sessionAuth = sessionStorage.getItem('diaryAuth');
-        if (!sessionAuth || sessionAuth !== 'authenticated') {
-            // Redirect back to main app for authentication
-            window.location.href = 'index.html';
-            return;
-        }
-    }
-    
     initializeSettings();
     setupEventListeners();
     loadSettings();
@@ -27,7 +16,8 @@ function setupEventListeners() {
     document.getElementById('backButton').addEventListener('click', function() {
         // Disable any beforeunload warnings
         window.onbeforeunload = null;
-        window.location.href = 'index.html';
+        // Use relative path for proper navigation
+        window.location.href = './index.html';
     });
 
     // Theme selector
@@ -43,6 +33,13 @@ function setupEventListeners() {
     fontSizeRange.addEventListener('input', function() {
         fontSizeValue.textContent = this.value + 'px';
         document.documentElement.style.fontSize = this.value + 'px';
+        saveSettings();
+    });
+
+    // Splash screen toggle
+    document.getElementById('splashScreenToggle').addEventListener('change', function() {
+        const splashDurationSection = document.getElementById('splashDurationSection');
+        splashDurationSection.style.display = this.checked ? 'flex' : 'none';
         saveSettings();
     });
 
@@ -169,8 +166,10 @@ function loadSettings() {
     document.getElementById('themeSelect').value = settings.theme || 'dark';
     document.getElementById('fontSizeRange').value = settings.fontSize || 16;
     document.getElementById('fontSizeValue').textContent = (settings.fontSize || 16) + 'px';
+    document.getElementById('splashScreenToggle').checked = settings.splashScreen !== false;
     document.getElementById('splashDurationRange').value = settings.splashDuration || 4;
     document.getElementById('splashDurationValue').textContent = (settings.splashDuration || 4) + 's';
+    document.getElementById('splashDurationSection').style.display = settings.splashScreen !== false ? 'flex' : 'none';
     document.getElementById('autoSaveToggle').checked = settings.autoSave !== false;
     document.getElementById('backupFrequency').value = settings.backupFrequency || 'weekly';
     document.getElementById('notificationsToggle').checked = settings.notifications || false;
@@ -236,6 +235,7 @@ function saveSettings() {
     const settings = {
         theme: document.getElementById('themeSelect').value,
         fontSize: parseInt(document.getElementById('fontSizeRange').value),
+        splashScreen: document.getElementById('splashScreenToggle').checked,
         splashDuration: parseInt(document.getElementById('splashDurationRange').value),
         autoSave: document.getElementById('autoSaveToggle').checked,
         backupFrequency: document.getElementById('backupFrequency').value,

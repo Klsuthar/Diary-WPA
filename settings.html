@@ -50,8 +50,15 @@
                     <span id="fontSizeValue">16px</span>
                 </div>
                 <div class="setting-item">
+                    <label>Enable Splash Screen</label>
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="splashScreenToggle" checked>
+                        <span class="slider"></span>
+                    </div>
+                </div>
+                <div class="setting-item" id="splashDurationSection">
                     <label for="splashDurationRange">Splash Screen Duration (seconds)</label>
-                    <input type="range" id="splashDurationRange" min="0" max="10" value="4" step="1">
+                    <input type="range" id="splashDurationRange" min="1" max="10" value="4" step="1">
                     <span id="splashDurationValue">4s</span>
                 </div>
             </div>
