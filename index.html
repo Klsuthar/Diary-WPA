@@ -26,6 +26,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/splash.css">
+    <link rel="stylesheet" href="css/auth.css">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="My Diary">
@@ -40,31 +42,16 @@
 <body>
     <!-- Splash Screen -->
     <div id="splashScreen" class="splash-screen">
-        <div class="splash-bg-particles"></div>
         <div class="splash-content">
-            <div class="splash-logo">
-                <div class="logo-ring">
-                    <div class="logo-ring-inner">
-                        <img src="images/logo256.png" alt="My Personal Diary" class="splash-logo-img">
-                    </div>
+            <div class="splash-logo-container">
+                <div class="splash-logo-wrapper">
+                    <img src="images/logo256.png" alt="My Personal Diary" class="splash-logo-img">
                 </div>
                 <h1 class="splash-title">My Personal Diary</h1>
-                <p class="splash-subtitle">Capture Life's Moments</p>
+                <p class="splash-subtitle">Your Digital Sanctuary</p>
             </div>
-            <div class="splash-quote-container">
-                <div class="quote-icon">
-                    <i class="fas fa-quote-left"></i>
-                </div>
-                <p id="splashQuote" class="splash-quote"></p>
-                <div class="quote-icon quote-right">
-                    <i class="fas fa-quote-right"></i>
-                </div>
-            </div>
-            <div class="splash-loading">
-                <div class="loading-progress">
-                    <div class="progress-bar"></div>
-                </div>
-                <p class="loading-text">Loading your digital sanctuary...</p>
+            <div class="splash-loader">
+                <div class="loader-spinner"></div>
             </div>
         </div>
     </div>

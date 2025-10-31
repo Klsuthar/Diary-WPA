@@ -1,10 +1,10 @@
 // sw.js - Service Worker
 
 // --- Cache Configuration ---
-const APP_SHELL_CACHE_NAME = 'my-personal-diary-static-v33';
-const DYNAMIC_CACHE_NAME = 'my-personal-diary-dynamic-v33';
-const FONTS_CACHE_NAME = 'my-personal-diary-fonts-v33';
-const IMAGES_CACHE_NAME = 'my-personal-diary-images-v33';
+const APP_SHELL_CACHE_NAME = 'my-personal-diary-static-v35';
+const DYNAMIC_CACHE_NAME = 'my-personal-diary-dynamic-v35';
+const FONTS_CACHE_NAME = 'my-personal-diary-fonts-v35';
+const IMAGES_CACHE_NAME = 'my-personal-diary-images-v35';
 
 // Cache size limits
 const MAX_DYNAMIC_CACHE_SIZE = 50;
@@ -14,6 +14,8 @@ const APP_SHELL_ASSETS = [
     'index.html',
     'settings.html',
     'css/style.css',
+    'css/splash.css',
+    'css/auth.css',
     'css/settings.css',
     'js/script.js',
     'js/settings.js',

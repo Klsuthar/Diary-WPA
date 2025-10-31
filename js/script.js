@@ -1844,42 +1844,23 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (isPattern) {
             overlay.innerHTML = `
-                <div style="
-                    background: var(--secondary-bg); padding: 30px; border-radius: 16px;
-                    box-shadow: 0 20px 40px rgba(0,0,0,0.3); max-width: 320px; width: 90%;
-                    text-align: center;
-                ">
-                    <i class="fas fa-unlock-alt" style="font-size: 2.5rem; color: var(--accent-color); margin-bottom: 20px;"></i>
-                    <h3 style="margin: 0 0 10px 0; color: var(--text-primary);">Draw Pattern</h3>
-                    <p style="margin: 0 0 20px 0; color: var(--text-secondary); font-size: 0.9rem;">Draw your unlock pattern</p>
-                    <div id="authPatternGrid" style="
-                        display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
-                        max-width: 150px; margin: 0 auto 20px;
-                    "></div>
-                    <div id="authPatternStatus" style="color: var(--text-secondary); font-size: 0.85rem;">Draw your pattern</div>
+                <div class="auth-container">
+                    <i class="fas fa-unlock-alt auth-icon"></i>
+                    <h3 class="auth-title">Draw Pattern</h3>
+                    <p class="auth-subtitle">Draw your unlock pattern</p>
+                    <div id="authPatternGrid"></div>
+                    <div id="authPatternStatus">Draw your pattern</div>
                 </div>
             `;
             initAuthPatternGrid();
         } else {
             overlay.innerHTML = `
-                <div style="
-                    background: var(--secondary-bg); padding: 30px; border-radius: 16px;
-                    box-shadow: 0 20px 40px rgba(0,0,0,0.3); max-width: 320px; width: 90%;
-                    text-align: center;
-                ">
-                    <i class="fas fa-lock" style="font-size: 2.5rem; color: var(--accent-color); margin-bottom: 20px;"></i>
-                    <h3 style="margin: 0 0 10px 0; color: var(--text-primary);">Enter Password</h3>
-                    <p style="margin: 0 0 20px 0; color: var(--text-secondary); font-size: 0.9rem;">This diary is password protected</p>
-                    <input type="password" id="passwordPrompt" placeholder="Enter password" style="
-                        width: 100%; padding: 12px; border: 2px solid var(--tertiary-bg);
-                        border-radius: 8px; background: var(--primary-bg); color: var(--text-primary);
-                        font-size: 1rem; margin-bottom: 20px; box-sizing: border-box;
-                    ">
-                    <button onclick="verifyPassword()" style="
-                        width: 100%; padding: 12px; background: var(--accent-color);
-                        color: var(--primary-bg); border: none; border-radius: 8px;
-                        font-weight: 600; cursor: pointer; font-size: 1rem;
-                    ">Unlock</button>
+                <div class="auth-container">
+                    <i class="fas fa-lock auth-icon"></i>
+                    <h3 class="auth-title">Enter Password</h3>
+                    <p class="auth-subtitle">This diary is password protected</p>
+                    <input type="password" id="passwordPrompt" class="auth-input" placeholder="Enter password">
+                    <button onclick="verifyPassword()" class="auth-button">Unlock</button>
                 </div>
             `;
             
@@ -1906,12 +1887,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 initializeForm();
                 slideToPanel(0, false);
             } else {
-                document.getElementById('passwordPrompt').style.borderColor = 'var(--danger-color)';
-                document.getElementById('passwordPrompt').value = '';
-                document.getElementById('passwordPrompt').placeholder = 'Wrong password, try again';
+                const input = document.getElementById('passwordPrompt');
+                input.classList.add('error');
+                input.value = '';
+                input.placeholder = 'Wrong password, try again';
                 setTimeout(() => {
-                    document.getElementById('passwordPrompt').style.borderColor = 'var(--tertiary-bg)';
-                    document.getElementById('passwordPrompt').placeholder = 'Enter password';
+                    input.classList.remove('error');
+                    input.placeholder = 'Enter password';
                 }, 2000);
             }
         };
@@ -1986,13 +1968,14 @@ document.addEventListener('DOMContentLoaded', () => {
             initializeForm();
             slideToPanel(0, false);
         } else {
-            document.getElementById('authPatternStatus').textContent = 'Wrong pattern, try again';
-            document.getElementById('authPatternStatus').style.color = 'var(--danger-color)';
+            const status = document.getElementById('authPatternStatus');
+            status.textContent = 'Wrong pattern, try again';
+            status.classList.add('error');
             setTimeout(() => {
                 clearAuthPatternVisual();
                 authPattern = [];
-                document.getElementById('authPatternStatus').textContent = 'Draw your pattern';
-                document.getElementById('authPatternStatus').style.color = 'var(--text-secondary)';
+                status.textContent = 'Draw your pattern';
+                status.classList.remove('error');
             }, 1500);
         }
     }

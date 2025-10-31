@@ -1,0 +1,212 @@
+/* Clean Password Protection UI */
+#passwordOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s ease;
+}
+
+.auth-container {
+    background: var(--secondary-bg);
+    padding: 40px 30px;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    max-width: 360px;
+    width: 90%;
+    text-align: center;
+    animation: slideUp 0.4s ease;
+}
+
+.auth-icon {
+    font-size: 3rem;
+    color: var(--accent-color);
+    margin-bottom: 20px;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.auth-title {
+    margin: 0 0 10px 0;
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.auth-subtitle {
+    margin: 0 0 30px 0;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.auth-input {
+    width: 100%;
+    padding: 14px 18px;
+    border: 2px solid var(--tertiary-bg);
+    border-radius: 12px;
+    background: var(--primary-bg);
+    color: var(--text-primary);
+    font-size: 1rem;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+}
+
+.auth-input:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.1);
+}
+
+.auth-input.error {
+    border-color: var(--danger-color);
+    animation: shake 0.5s ease;
+}
+
+.auth-button {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+    color: var(--primary-bg);
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.auth-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(245, 158, 11, 0.3);
+}
+
+.auth-button:active {
+    transform: translateY(0);
+}
+
+/* Pattern Lock Grid */
+#authPatternGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    max-width: 200px;
+    margin: 0 auto 20px;
+    padding: 30px;
+    background: var(--primary-bg);
+    border-radius: 16px;
+}
+
+.pattern-dot {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--secondary-bg);
+    border: 3px solid var(--tertiary-bg);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.pattern-dot:hover {
+    border-color: var(--accent-color);
+    transform: scale(1.1);
+}
+
+.pattern-dot.active {
+    background: var(--accent-color);
+    border-color: var(--accent-color);
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.5);
+}
+
+.pattern-dot.active::after {
+    content: '';
+    width: 20px;
+    height: 20px;
+    background: var(--primary-bg);
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#authPatternStatus {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-top: 10px;
+}
+
+#authPatternStatus.error {
+    color: var(--danger-color);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-10px);
+    }
+    75% {
+        transform: translateX(10px);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+@media (max-width: 480px) {
+    .auth-container {
+        padding: 30px 20px;
+    }
+    
+    .auth-icon {
+        font-size: 2.5rem;
+    }
+    
+    .auth-title {
+        font-size: 1.3rem;
+    }
+    
+    #authPatternGrid {
+        gap: 15px;
+        padding: 20px;
+    }
+    
+    .pattern-dot {
+        width: 45px;
+        height: 45px;
+    }
+}
