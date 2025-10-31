@@ -1,31 +1,29 @@
 // sw.js - Service Worker
 
 // --- Cache Configuration ---
-const APP_SHELL_CACHE_NAME = 'my-personal-diary-static-v23';
-const DYNAMIC_CACHE_NAME = 'my-personal-diary-dynamic-v23';
-const FONTS_CACHE_NAME = 'my-personal-diary-fonts-v23';
-const IMAGES_CACHE_NAME = 'my-personal-diary-images-v23';
+const APP_SHELL_CACHE_NAME = 'my-personal-diary-static-v24';
+const DYNAMIC_CACHE_NAME = 'my-personal-diary-dynamic-v24';
+const FONTS_CACHE_NAME = 'my-personal-diary-fonts-v24';
+const IMAGES_CACHE_NAME = 'my-personal-diary-images-v24';
 
 // Cache size limits
 const MAX_DYNAMIC_CACHE_SIZE = 50;
 const MAX_IMAGES_CACHE_SIZE = 20;
 
 const APP_SHELL_ASSETS = [
-    '/',
-    'index.html',
-    'settings.html',
-    'css/style.css',
-    'css/settings.css',
-    'js/script.js',
-    'js/settings.js',
-    'manifest.json',
-    'images/logo.ico',
-    'images/logo.svg',
-    'images/logo16.png',
-    'images/logo32.png',
-    'images/logo64.png',
-    'images/logo256.png',
-    'images/logo512.png'
+    '/index.html',
+    '/settings.html',
+    '/css/style.css',
+    '/css/settings.css',
+    '/js/script.js',
+    '/js/settings.js',
+    '/images/logo.ico',
+    '/images/logo.svg',
+    '/images/logo16.png',
+    '/images/logo32.png',
+    '/images/logo64.png',
+    '/images/logo256.png',
+    '/images/logo512.png'
 ];
 
 const EXTERNAL_ASSETS = [
@@ -117,7 +115,7 @@ self.addEventListener('fetch', event => {
                 .catch(() => {
                     // If the network request fails (e.g., user is offline), serve the main index.html from the cache.
                     console.log('[Service Worker] Navigation fetch failed. Serving offline fallback from cache.');
-                    return caches.match('index.html');
+                    return caches.match('/index.html');
                 })
         );
         return;

@@ -681,7 +681,7 @@ function updateAuthSections() {
 }
 
 function showAboutDialog() {
-    alert(`My Personal Diary v1.1.0
+    alert(`Diary v3.0.0
 
 A simple, secure, and private diary application that stores your entries locally on your device.
 
@@ -695,5 +695,5 @@ Features:
 • Custom notifications
 • Pattern & Password lock
 
-Created with ❤️ for personal journaling.`);
+Created with ❤️ by Kanhaiya lal`);
 }
