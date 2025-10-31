@@ -40,11 +40,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (splashScreen && splashQuote) {
         const settings = JSON.parse(localStorage.getItem('diarySettings') || '{}');
         if (settings.splashScreen === false) {
-            hideSplashScreen();
+            splashScreen.style.display = 'none';
+            checkPasswordProtection();
         } else {
             const randomQuote = getRandomQuote();
             splashQuote.textContent = randomQuote;
-            const splashDuration = (settings.splashDuration || 4) * 1000;
+            const splashDuration = Math.max((settings.splashDuration || 4), 1) * 1000;
             setTimeout(hideSplashScreen, splashDuration);
         }
     }
@@ -674,7 +675,15 @@ document.addEventListener('DOMContentLoaded', () => {
             let allSavedData = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) || '{}');
             allSavedData[currentFormDate] = formDataToSave;
 
-            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(allSavedData));
+            try {
+                localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(allSavedData));
+            } catch (e) {
+                if (e.name === 'QuotaExceededError') {
+                    if (!isSilent) showToast('Storage full! Please export and clear old entries.', 'error');
+                    return false;
+                }
+                throw e;
+            }
 
             if (!isSilent) {
                 if (document.visibilityState === 'visible') {
@@ -1467,8 +1476,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (dateInput) dateInput.addEventListener('change', () => {
         const newDateStr = dateInput.value;
-        updateCurrentDateDisplay(newDateStr);
-        loadFormForDate(newDateStr);
+        if (newDateStr && newDateStr.match(/^\d{4}-\d{2}-\d{2}$/)) {
+            updateCurrentDateDisplay(newDateStr);
+            loadFormForDate(newDateStr);
+        }
     });
     if (dateIncrementButton) dateIncrementButton.addEventListener('click', () => changeDate(1));
     if (dateDecrementButton) dateDecrementButton.addEventListener('click', () => changeDate(-1));
@@ -2066,10 +2077,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         
                         newWorker.addEventListener('statechange', () => {
                             if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                                showToastWithAction('New version available!', 'Update', () => {
-                                    newWorker.postMessage({ action: 'skipWaiting' });
-                                    window.location.reload();
-                                });
+                                if (typeof showToastWithAction === 'function') {
+                                    showToastWithAction('New version available!', 'Update', () => {
+                                        window.location.reload();
+                                    });
+                                }
                             }
                         });
                     });
